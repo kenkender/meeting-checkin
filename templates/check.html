@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบเช็คอิน</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" />
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #002b59;
+      color: #ffffff;
+    }
+    header {
+      background-color: #001f3f;
+      padding: 20px;
+      text-align: center;
+    }
+    header img {
+      height: 80px;
+    }
+    header h1 {
+      margin: 10px 0 0 0;
+      font-size: 28px;
+    }
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .form-container {
+      background: #ffffff;
+      color: #000000;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #002b59;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: 2px solid #002b59;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #e5232a;
+      border: none;
+      color: #ffffff;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c01922;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="โลโก้ตำรวจท่องเที่ยว" />
+    <h1>ระบบเช็คอินผู้เข้าร่วมงาน</h1>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <h2>กรุณากรอกชื่อ-นามสกุล</h2>
+      <form method="POST" action="/check">
+        <input type="text" name="name" placeholder="ชื่อ - นามสกุล" required />
+        <button type="submit">เช็คอิน</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
