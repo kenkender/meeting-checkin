@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>หน้าแรก</title>
+    <meta charset="UTF-8">
+    <title>หน้าหลัก</title>
 </head>
-<body>
-  <h1>ยินดีต้อนรับ</h1>
-  <p>นี่คือหน้า Index.html</p>
-  <a href="/check">ไปหน้า Check-in</a>
+<body style="font-family: Arial, sans-serif;">
+    <h1>ยินดีต้อนรับ</h1>
+    <p>กรุณากรอกชื่อของคุณเพื่อลงทะเบียน Check-in</p>
+
+    <form action="/check" method="POST">
+        <input type="text" name="name" placeholder="กรอกชื่อของคุณ" required>
+        <button type="submit">Check-in</button>
+    </form>
 </body>
 </html>
