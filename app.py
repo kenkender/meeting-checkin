@@ -1,26 +1,28 @@
 from flask import Flask, render_template, request
 import pandas as pd
-import os
 from datetime import datetime
-from flask import send_file
+import os
 
 app = Flask(__name__)
-data = pd.read_csv('data.csv')
-log_file = 'checkin_log.csv'
 
+# โหลดข้อมูลจาก CSV
+DATA_FILE = 'data.csv'
+LOG_FILE = 'checkin_log.csv'
+data = pd.read_csv(DATA_FILE)
+
+# =========================
+# หน้าแรก: input ชื่อผู้เข้าร่วม
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route("/check", methods=["GET", "POST"])
+# =========================
+# เช็คอินและแสดงที่นั่ง
+@app.route("/check", methods=["POST"])
 def check():
-    if request.method == "POST":
-        # เช็คอิน logic...
-        return render_template("check.html", ...)
-    return render_template("check.html")  # ฟอร์มกรอกชื่อ
     name = request.form.get('name')
 
-    # ค้นจากชื่อใน data.csv
+    # ค้นหาชื่อใน data.csv
     result = data[data['name'].str.contains(name, na=False)]
 
     if not result.empty:
@@ -28,15 +30,12 @@ def check():
         label = person['label']
         checkin_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # ถ้า log ยังไม่มี ให้สร้าง header
-        if not os.path.exists(log_file):
-            with open(log_file, 'w', encoding='utf-8') as f:
+        if not os.path.exists(LOG_FILE):
+            with open(LOG_FILE, 'w', encoding='utf-8') as f:
                 f.write('name,label,table,seat,time\n')
 
-        # อ่าน log เดิม
-        log_df = pd.read_csv(log_file)
+        log_df = pd.read_csv(LOG_FILE)
 
-        # เช็คว่าชื่อนี้เช็คอินไปแล้วหรือยัง
         if name in log_df['name'].values:
             prev_time = log_df.loc[log_df['name'] == name, 'time'].values[0]
             return render_template('result.html',
@@ -47,8 +46,7 @@ def check():
                                    already=True,
                                    prev_time=prev_time)
 
-        # บันทึก log ใหม่
-        with open(log_file, 'a', encoding='utf-8') as f:
+        with open(LOG_FILE, 'a', encoding='utf-8') as f:
             f.write(f"{name},{label},{person['table']},{person['seat']},{checkin_time}\n")
 
         return render_template('result.html',
@@ -58,24 +56,18 @@ def check():
                                label=label,
                                already=False,
                                time=checkin_time)
-
     else:
         return render_template('result.html', error='ไม่พบชื่อในระบบ กรุณาติดต่อเจ้าหน้าที่')
-    
+
+# =========================
+# หน้าผู้ดูแลดูเช็คอินทั้งหมด
 @app.route('/admin')
 def admin():
-    if not os.path.exists(log_file):
-        return render_template('admin.html', data=[])
-    log_df = pd.read_csv(log_file)
-    return render_template('admin.html', data=log_df.to_dict(orient='records'))
-
-@app.route('/download')
-def download():
-    if os.path.exists(log_file):
-        return send_file(log_file, as_attachment=True)
+    if os.path.exists(LOG_FILE):
+        log_df = pd.read_csv(LOG_FILE)
     else:
-        return "ยังไม่มีข้อมูล Check-in"
-    
+        log_df = pd.DataFrame(columns=['name', 'label', 'table', 'seat', 'time'])
+    return render_template('admin.html', log=log_df.to_dict(orient='records'))
+
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=False, host='0.0.0.0', port=port)
+    app.run(debug=True, host='0.0.0.0', port=5000)
