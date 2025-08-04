@@ -23,6 +23,8 @@ def check():
     if request.method == "POST":
         return redirect(url_for("check"))  # หรือ render_template("check.html")
     name = request.form.get('name')
+    if not name:
+        return render_template("check.html", error="กรุณากรอกชื่อก่อนกดเช็คอิน")
 
     # ค้นหาชื่อใน data.csv
     result = data[data['name'].str.contains(name, na=False)]
