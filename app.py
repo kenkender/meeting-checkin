@@ -18,9 +18,9 @@ def index():
 
 # =========================
 # เช็คอินและแสดงที่นั่ง
-@app.route("/check", methods=["GET", "POST"])
+@app.route("/check", methods=["POST"])
 def check():
-    if request.method == "GET":
+    if request.method == "POST":
         return redirect(url_for("check"))  # หรือ render_template("check.html")
     name = request.form.get('name')
     if not name:
