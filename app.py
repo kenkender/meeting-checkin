@@ -38,7 +38,7 @@ def check():
 
         if name in log_df['name'].values:
             prev_time = log_df.loc[log_df['name'] == name, 'time'].values[0]
-            return render_template('result.html',
+            return render_template('check.html',
                                    name=name,
                                    table=person['table'],
                                    seat=person['seat'],
@@ -49,7 +49,7 @@ def check():
         with open(LOG_FILE, 'a', encoding='utf-8') as f:
             f.write(f"{name},{label},{person['table']},{person['seat']},{checkin_time}\n")
 
-        return render_template('result.html',
+        return render_template('check.html',
                                name=name,
                                table=person['table'],
                                seat=person['seat'],
@@ -57,7 +57,7 @@ def check():
                                already=False,
                                time=checkin_time)
     else:
-        return render_template('result.html', error='ไม่พบชื่อในระบบ กรุณาติดต่อเจ้าหน้าที่')
+        return render_template('check.html', error='ไม่พบชื่อในระบบ กรุณาติดต่อเจ้าหน้าที่')
 
 # =========================
 # หน้าผู้ดูแลดูเช็คอินทั้งหมด
