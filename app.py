@@ -12,8 +12,10 @@ log_file = 'checkin_log.csv'
 def index():
     return render_template('index.html')
 
-@app.route('/check', methods=['POST'])
+@app.route('/check', methods=["GET",'POST'])
 def check():
+    if request.method == 'GET':
+        return render_template('checkin_form.html')  # ฟอร์มกรอกชื่อ
     name = request.form.get('name')
 
     # ค้นจากชื่อใน data.csv
