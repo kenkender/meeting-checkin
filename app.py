@@ -18,8 +18,10 @@ def index():
 
 # =========================
 # เช็คอินและแสดงที่นั่ง
-@app.route("/check", methods=["POST"])
+@app.route("/check", methods=["GET", "POST"])
 def check():
+    if request.method == "GET":
+        return redirect(url_for("index"))  # หรือ render_template("checkin_form.html")
     name = request.form.get('name')
 
     # ค้นหาชื่อใน data.csv
